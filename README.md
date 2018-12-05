@@ -1,3 +1,4 @@
+# (README Under Construction)
 ## Description
 Temporal Tagger is a library desigened for temporal tagging in Brazilian portuguese. It has the ability to parse absolute and partial date references, expressed 
 in numerical and alphabetic forms. The library offers support for major date formats, such as dd/mm/yyyy, Day of Month of Year, last December, this January...etc. 
