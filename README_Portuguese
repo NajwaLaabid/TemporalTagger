@@ -1,5 +1,6 @@
 # TemporalTagger
-Ferramenta para extração e análise de expressões de tempo a partir de textos de linguagem natural. Você pode encontrar o README em inglês <a href="https://github.com/sankhyalabs/bia-time/blob/master/README_ENG.md">here</a>.
+Ferramenta para extração e análise de expressões de tempo a partir de textos de linguagem natural em Portugues do Brasil. 
+Você pode encontrar o README em inglês <a href="https://github.com/NajwaLaabid/TemporalTagger/blob/master/README.md">here</a>.
 
 ## Visão geral e uso
 TemporalTagger é uma biblioteca projetada para marcação temporal em português brasileiro. A biblioteca propõe uma solução para o subproblema da criação de um período (data de início e data final em um formato amigável ao computador) de uma consulta de usuário em linguagem natural, juntamente com uma ferramenta mais geral para extrair expressões de tempo de textos de linguagem natural em geral. . Ele pode ser usado em chatbots, agendadores, assistentes pessoais ou qualquer programa esperado para receber informações temporais em um formato não padrão.
