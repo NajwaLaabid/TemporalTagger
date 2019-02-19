@@ -1,0 +1,137 @@
+# TemporalTagger
+Ferramenta para extração e análise de expressões de tempo a partir de textos de linguagem natural. Você pode encontrar o README em inglês <a href="https://github.com/sankhyalabs/bia-time/blob/master/README_ENG.md">here</a>.
+
+## Visão geral e uso
+TemporalTagger é uma biblioteca projetada para marcação temporal em português brasileiro. A biblioteca propõe uma solução para o subproblema da criação de um período (data de início e data final em um formato amigável ao computador) de uma consulta de usuário em linguagem natural, juntamente com uma ferramenta mais geral para extrair expressões de tempo de textos de linguagem natural em geral. . Ele pode ser usado em chatbots, agendadores, assistentes pessoais ou qualquer programa esperado para receber informações temporais em um formato não padrão.
+<br> 
+TemporalTagger pode ser usado como mostrado abaixo:
+<br>
+```
+// instancia um analisador com uma data de referência padrão
+PeriodParser periodParser = new PeriodParser();
+
+// recebe resultado da análise na forma de um objeto Tempo
+Period
+BiaPeriod result = periodParser.parse("Por favor, me manda o relatório das vendas da semana passada.");
+
+// obtêm as datas formatadas
+LocalDate start = result.getInitialDateFormatted();
+LocalDate end = result.getFinalDateFormatted();
+```
+
+## Por que TemporalTagger
+### TemporalTagger vs Processadores de Linguagem Natural (DialogFlow)
+A necessidade do TemporalTagger surgiu quando tentei usar o <a href="https://dialogflow.com/"> Dialogflow </a> (DF) para o PNL. 
+DF fez um bom trabalho ao encontrar a intenção do usuário e analisar a maioria das entidades da consulta. 
+No entanto, quando se tratava de informação de tempo, os analisadores de uso geral tinham dificuldade sempre que a gramática se separava muito de uma exatidão estrita, ou as unidades de tempo tornavam-se complicadas demais na relatividade. Como tal, o BiaTime deve ser usado como um complemento para analisadores de linguagem natural para todos os propósitos, bem como uma solução independente para marcação temporal em projetos que não dependem de soluções avançadas de tecnologia para PLN.
+
+### TemporalTagger vs Taggers temporais de uso geral 
+<a href="https://nlp.stanford.edu/projects/time.shtml"> Marcação temporal </a> é um subcampo da PLN amplamente reconhecido e explorado. O objetivo é reconhecer as expressões de tempo e analisá-las em um formato mais amigável ao computador. Dada a variedade de textos-fonte para trabalhar, bem como a ampla gama de programas para carter, os taggers temporais de uso geral normalmente retornam datas parcialmente analisadas que precisam ser processadas e resolvidas. BiaTime concentra-se em um campo restrito com um propósito específico em mente e é capaz de retornar datas resolvidas, formatadas e prontas para uso dos textos que são alimentados. Como tal, essa ferramenta manipula outra camada de processamento para abstrair toda a unidade de extração de tempo.
+<br> <br>
+Além disso, o TemporalTagger também lida com a extração de datas sem resolução parcial (termo usado nos tutoriais README e desenvolvimento para se referir à ação de extrair valores de datas implícitos de um texto. Ex: de 2 (valores implícitos de mês e ano) a 4 de dezembro de 2013) para textos que não sejam consultas de usuários. Futuras versões do BiaTime terão como objetivo fornecer esquemas de resolução de propósito geral para ampliar o escopo do trabalho da biblioteca.
+
+## O que o TemporalTagger faz
+TemporalTagger tem a capacidade de analisar referências de datas absolutas e parciais, expressas em formas numéricas e alfabéticas. Abaixo estão alguns exemplos das datas e tipos suportados pela biblioteca.
+<br>
+<table>
+      <thead>
+            <tr>
+                  <th>Type de Datas</th>
+                  <th>Exemplos de Entrada</th>
+                  <th>Saída (objeto PeriodParser, LocalDate)</th>
+            </tr>
+      </thead>
+      <tbody>
+            <tr>
+                  <td rowspan = 2>Data padrão (absoluta)</td>
+                  <td>Manda informações sobre as vendas desde o dia 23/02/2018 até o dia 24/05/2018</td>
+                  <td>Init.: <b>01/11/2018</b><br>Fin.: <b>31/12/2018</b></td>
+            </tr>
+            <tr>
+                  <td>Como foram as vendas do dia 05 do dezembro do ano 2015?</td>
+                  <td>Init.: <b>05/12/2015</b><br>Fin.: <b>05/12/2015</b></td>
+            </tr>
+            <tr>
+                  <td rowspan = 2>Data padrão (relativa, com data de referência: 27/12/2018)</td>
+                  <td>Por favor, como foi o desempenho da empresa no ano passado?</td>
+                  <td>Init.: <b>01/01/2017</b><br>Fin.: <b>31/12/2017</b></td>
+            </tr>
+            <tr>
+                    <td>Como estão as compras da semana atual?</td>
+                    <td>Init.: <b>24/12/2018</b><br>Fin.: <b>30/12/2018</b></td>
+            </tr>
+            <tr>
+                  <td rowspan = 2>Unidades de Tempo Adicionais</td>
+                  <td>Marca uma viagem na minha agenda para o proximo final de semana.</td>
+                  <td>Init.: <b>29/12/2018</b><br>Fin.: <b>30/12/2018</b></td>
+            </tr>  
+            <tr>
+                  <td>Quero ver as medias do semestre passado.</td>
+                  <td>Init.: <b>01/01/2018</b><br>Fin.: <b>30/06/2018</b></td>
+            </tr>
+            <tr>
+                  <td rowspan = 2>Unidades Cardeais de Tempo</td>
+                  <td>Quero receber os meus relatórios na primeira semana do terceiro trimestre do ano.</td>
+                  <td>Init.: <b>02/07/2018</b><br>Fin.: <b>07/07/2018</b></td>
+            </tr>
+            <tr>    
+                  <td>Quais foram as datas da segunda semana do mes passado?</td>
+                  <td>Init.: <b>12/12/2018</b><br>Fin.: <b>17/12/2018</b></td>
+            </tr>
+            <tr>
+                  <td rowspan = 2>Unidades de Tempo de Quantidade</td>
+                  <td>Manda esse email para meus colegas dois dias depois.</td>
+                  <td>Init.: <b>29/12/2018</b><br>Fin.: <b>29/12/2018</b></td>
+            </tr>
+                  <td>O que aconteceu na minha cidade 3 semanas antes?</td>
+                  <td>Init.: <b>10/12/2018</b><br>Fin.: <b>15/12/2018</b></td>
+            </tr>
+      </tbody>
+</table>
+
+## O que o TemporalTagger NÃO faz
+Como mencionado anteriormente, a TemporalTagger v1 não oferece um esquema de resolução com seu MainParser. Como tal, quaisquer datas parciais recuperadas por este analisador serão preenchidas automaticamente a partir dos valores de data de referência (para o dia de referência padrão de hoje (01/01/2019), ao usar o MainParser, a consulta "2 a 4 de dezembro de 2013" retornará (ini .: 02/02/2019, fin .: 04/12/2013) ao invés do pretendido (ini .: 02/12/2013, fin .: 04/12/2013)). O PeriodParser, embora seja capaz de resolução de data, não espera mais de 2 expressões de tempo em cada consulta e retorna a data padrão (definida como hoje) se mais datas forem encontradas. Finalmente, na v1, ainda não há suporte para unidades de tempo. A tabela abaixo ilustra os exemplos mencionados neste texto. Se você quiser melhorar o trabalho da biblioteca nesta área ou mais, confira os tutoriais de desenvolvimento na próxima seção.
+<br>
+<table>
+      <thead>
+            <tr>
+                  <th>Caso de Uso</th>
+                  <th>Exemplos de Input</th>
+                  <th>Output Atual</th>
+            </tr>
+      </thead>
+      <tbody>
+            <tr>
+                  <td>Nenhuma resolução-parcial para MainParser</td>
+                  <td>Mostra as vendas do dia 02 ate o dia 14/03/2016. Amanha, me manda o relatório dessas vendas por favor.</td>
+                  <td>Datas retornadas com data de referência = 01/01/2019: 02/01/01/2019, 14/03/2016, 02/01/2019.</td>
+            </tr>
+            <tr>
+                  <td>Várias instâncias de data</td>
+                  <td>Mostra as vendas do setor X da semana passada, ontem e dia 12/03/2016.</td>
+                  <td>Erro: mais de duas datas encontradas, retorno da data padrão: 01/01/2019</td>
+            </tr>
+            <tr>
+                  <td>Unidades de tempo</td>
+                  <td>Marca no meu calendário uma reuniao amanha as 4 horas.</td>
+                  <td>Não é possível analisar horas => nenhuma instância de tempo retornada.</td> 
+            </tr>
+      </tbody>
+</table>
+
+## Tutoriais de Desenvolvimento
+Se você gostaria de contribuir para o desenvolvimento desta biblioteca, os tutoriais abaixo podem ajudá-lo a se familiarizar mais com sua implementação. Todos os tutoriais e documentação podem ser encontrados no wiki deste repositório.
+
+1. <a href="https://github.com/NajwaLaabid/TemporalTagger/wiki/Como-o-algoritmo-funciona">Como o algoritmo funciona</a>
+2. <a href="https://github.com/NajwaLaabid/TemporalTagger/wiki/Como-depurar">Como depurar</a>
+3. <a href="https://github.com/NajwaLaabid/TemporalTagger/wiki/Como-adicionar-novos-casos-a-TemporalTagger">Como adicionar novos casos</a>
+4. <a href="https://github.com/NajwaLaabid/TemporalTagger/wiki/Trabalhos-Futuros">Trabalho Futuro</a>
+
+## Instalação
+Para usar o TemporalTagger, execute as seguintes etapas:
+- Faça o download do arquivo jar da última versão da seção correspondente neste repositório do github.
+- Inclua o arquivo jar como uma dependência em seu projeto.
+- Importe a biblioteca onde necessário em seus arquivos de programa.
+- Instancie o (s) analisador (es) que você deseja usar (consulte o exemplo na primeira seção deste README).
+- Chame a função "parse" do (s) analisador (es) iniciada anteriormente e forneça o texto que você deseja analisar.
+
