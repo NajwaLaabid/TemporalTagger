@@ -1,90 +1,131 @@
 package algorithm;
 
-import model.State;
-import model.Period;
-import model.Automaton;
+import model.TempoGraph;
+import model.TempoNode;
+import model.TempoPeriod;
+import util.TempoLogger;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static java.lang.Math.max;
+import static util.Constants.*;
 
+
+/**
+ * Classe para executar DFS (pesquisa em profundidade) no autômato da biblioteca.
+ * A classe tenta analisar todas as expressões de tempo em sua ordem de aparecimento em relação a um conjunto
+ * de expressões de tempo predefinidas no TempoGraph. O algoritmo DFS continua em execução até que nenhuma outra
+ * data seja encontrada ou que o texto inteiro seja verificado. O algoritmo é executado através da função
+ * principal da classe "run" e é invocado em todos os Parsers da biblioteca. "Run" retorna uma lista de todas
+ * as expressões de tempo encontradas e analisadas, a serem avaliadas e filtradas pela classe Reductor
+ * nos analisadores.
+ * @author Najwa Laabid
+ */
 public class DFS {
-    ArrayList<Period> dates;
-    Automaton biaTree;
-    int highestDateFoundIdx;
+    ArrayList<TempoPeriod> dates;
+    ArrayList<TempoPeriod> finalDates;
+    TempoGraph tempoGraph;
+    int highestIndexFound;
+    LocalDate refDate;
+    Reductor reductor;
 
-    public ArrayList<Period> run(String text) {
-
-        dates = new ArrayList<Period>();
-
-        int lastSize = dates.size();
-
-        biaTree = new Automaton();
-        run(biaTree.getHead(), text, 0, new Period());
-
-        highestDateFoundIdx = 0;
-
-        while(dates.size() > lastSize){
-            lastSize = dates.size();
-
-            dates = new Reductor().run(dates);
-
-            updateHighestDateFoundIdx();
-
-            if(highestDateFoundIdx >= text.length() - 1) {
-//                System.out.println("+++++++++++++++++++++++++++++ HIGHEST FOUND +++++++++++++++++++++++++++++++++++++");
-//                System.out.println("highestDateFoundIdx: " + highestDateFoundIdx);
-                break;
-            }
-
-            text = text.substring(highestDateFoundIdx);
-//            System.out.println("+++++++++++++++++++++++++++++ second round +++++++++++++++++++++++++++++++++++++");
-//            System.out.println("Text: " + text);
-            run(biaTree.getHead(), text, highestDateFoundIdx, new Period());
-        }
-
-        return dates;
+    /**
+     * Construtor com data de referência personalizável
+     * @param refDate
+     */
+    public DFS(LocalDate refDate) {
+        this.refDate = refDate;
     }
 
-    public void updateHighestDateFoundIdx(){
+    /**
+     * Construtor com data de referência default (data de hoje)
+     */
+    public DFS() {
+        this(LocalDate.now());
+    }
 
+    /**
+     * Atravessa o autômato da biblioteca no modo DFS com o texto do usuário como "input" para localizar e analisar
+     * todas as expressões de tempo reconhecíveis para a biblioteca.
+     * @param text texto do usuário em linguagem natural
+     * @return lista das datas encontradas e analisadas
+     */
+    public ArrayList<TempoPeriod> run(String text) {
+        TempoLogger.logText("========== DFS: run função", DEBUG_DFS);
+        dates = new ArrayList<>();
+        finalDates = new ArrayList<>();
+        reductor = new Reductor();
+
+        int lastSize = 0;
+        int round = 0;
+
+        // inicialize o autômato do algoritmo
+        tempoGraph = new TempoGraph(refDate);
+
+        // primeira chamada para função de execução dfs recursiva
+        run(tempoGraph.getHead(), text, 0, new TempoPeriod());
+
+        highestIndexFound = 0;
+
+        while(dates.size() > 0){ // enquanto estamos encontrando novas datas
+            round++;
+
+            // atualize a variável de datas após remover duplicatas e a análises incompletas de data.
+            finalDates.addAll(reductor.run(dates));
+            dates = reductor.run(dates);
+
+            // continuar a análise do texto a partir do índice do highestIndexFound
+            text = updateText(text);
+            dates.clear();
+
+            TempoLogger.logText("Round " + round + " with text: " + text, DEBUG_DFS);
+            run(tempoGraph.getHead(), text, 0, new TempoPeriod());
+        }
+
+        return finalDates;
+    }
+
+    public String updateText(String text){
         for(int i = 0; i < dates.size(); i++) {
-            if ( highestDateFoundIdx < dates.get(i).getEndIdx() ) {
-                highestDateFoundIdx = dates.get(i).getEndIdx();
-            }
+            text = text.replace(dates.get(i).getDateString(), "");
         }
+
+        return text;
     }
 
-    public void run(State node, String text, int startPos, Period parentPeriod) {
-//        System.out.println("current state: " +  node.getRegex());
-//        System.out.println("initial date in parent: " + parentPeriod.initialDateToString());
-//        System.out.println("initial date in state: " +  node.getCurDate().initialDateToString());
-//        System.out.println("start index in parent: " +  parentPeriod.getStartIdx());
-//        System.out.println("end index in parent: " +  parentPeriod.getEndIdx());
+    /**
+     * Run recursiva: implementação recursiva de uma passagem DFS do autômato da biblioteca.
+     * A travessia para quando um estado final é encontrado.
+     * Caso contrário, a função de conversão de cada estado é executada antes de passar para suas conexões.
+     * @param node
+     * @param text
+     * @param startPos
+     * @param parentPeriod
+     */
+    public void run(TempoNode node, String text, int startPos, TempoPeriod parentPeriod) {
+        TempoLogger.logText("No node (estado): ", DEBUG_DFS);
 
-        if(node.getChildren().size() == 0) {
-            node.convert(text, startPos, parentPeriod);
-//            System.out.println("leaf found. Regex of leaf " +  node.getRegex());
-//            System.out.println("initialDate of leaf " +  node.getCurDate().initialDateToString());
-//            System.out.println("finalDate of leaf " +  node.getCurDate().finalDateToString());
-//
-//            System.out.println("startIndex of leaf " +  node.getCurDate().getStartIdx());
-//            System.out.println("endIndex of leaf " +  node.getCurDate().getEndIdx());
+        TempoLogger.logText("Do estado precedente: ", DEBUG_DFS);
+        TempoLogger.logPeriod(parentPeriod, DEBUG_DFS);
 
+        // se nenhuma conexão for encontrada, o estado é um estado final
+        if(node.getConnections().size() == 0) {
+            node.convert(text,  parentPeriod);
+
+            TempoLogger.logText("Final node encontrado. ", DEBUG_DFS);
+            // adicione a data encontrada no estado final à variável de datas se não estiver vazia
             if(!node.getCurDate().empty()) {
-                highestDateFoundIdx = max(highestDateFoundIdx, node.getCurDate().getEndIdx());
-//                System.out.println("============ adding date: " + node.getCurDate().initialDateToString());
+                TempoLogger.logText("Adicionado a data... ", DEBUG_DFS);
                 dates.add(node.getCurDate());
             }
             return;
         }
-
-        if(node.convert(text, startPos, parentPeriod)) {
-//            System.out.println("Children size: " + node.getChildren().size());
-            for (int i = 0; i < node.getChildren().size(); i++) {
-                run(node.getChildren().get(i), text, startPos, node.getCurDate());
+        // se o estado atual não for final, execute a função do estado atual e verifique suas conexões
+        if(node.convert(text, parentPeriod)) {
+            TempoLogger.logText("Número de estados conectados: ", DEBUG_DFS);
+            for (int i = 0; i < node.getConnections().size(); i++) {
+                run(node.getConnections().get(i), text, 0, node.getCurDate());
             }
         }
     }
-
 }

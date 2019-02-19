@@ -1,21 +1,21 @@
 package algorithm;
 
-import model.Period;
+import model.TempoPeriod;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 public class Reductor {
-    class SortBySize implements Comparator<Period>
+    class SortBySize implements Comparator<TempoPeriod>
     {
-        public int compare(Period a, Period b)
+        public int compare(TempoPeriod a, TempoPeriod b)
         {
             return (b.getEndIdx() - b.getStartIdx()) - (a.getEndIdx() - a.getStartIdx());
         }
     }
 
-    public ArrayList<Period> run(ArrayList<Period> dates) {
+    public ArrayList<TempoPeriod> run(ArrayList<TempoPeriod> dates) {
 
         Collections.sort(dates, new SortBySize());
 //        System.out.println("======== Initial ===========");
@@ -53,8 +53,8 @@ public class Reductor {
         return dates;
     }
 
-    public ArrayList<Period> removeDuplicates(ArrayList<Period> dates){
-        Period cmp = dates.get(0);
+    public ArrayList<TempoPeriod> removeDuplicates(ArrayList<TempoPeriod> dates){
+        TempoPeriod cmp = dates.get(0);
 
         for(int i = 0; i < dates.size() - 1; i++) {
             if (dates.get(i).initialDateToString().equals(dates.get(i+1).initialDateToString())
@@ -67,7 +67,7 @@ public class Reductor {
         return dates;
     }
 
-    public static ArrayList<Period> delete(ArrayList<Period> dates) {
+    public static ArrayList<TempoPeriod> delete(ArrayList<TempoPeriod> dates) {
         boolean intersection;
         boolean withinBounds;
 

@@ -4,12 +4,18 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 
 @Suite.SuiteClasses({
+        CardinalsTest.class,
+        CommemorativeDatesTest.class,
         DayTest.class,
+        MixedTests.class,
         MonthTest.class,
-        YearTest.class,
-        WeekTest.class,
+        QuantityTest.class,
+        SpecialDatesTest.class,
+        TriSemesterTest.class,
         UltimoProximoTest.class,
-        MixedTests.class
+        WeekendTest.class,
+        WeekTest.class,
+        YearTest.class
 })
 
 public class AllTests {

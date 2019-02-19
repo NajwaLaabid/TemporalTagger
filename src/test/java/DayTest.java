@@ -1,4 +1,4 @@
-import model.Period;
+import model.TempoPeriod;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,277 +44,357 @@ public class DayTest {
 
     @Test
     public void day1() {
-        Period biaPeriod = periodParser.parse("como estão as vendas do dia por favor");
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas do dia por favor");
 
-        assertEquals(today, biaPeriod.getInitialDateFormatted());
-        assertEquals(today, biaPeriod.getFinalDateFormatted());
+        assertEquals(today, TempoPeriod.getInitialDateFormatted());
+        assertEquals(today, TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
     public void day2() {
-        Period biaPeriod = periodParser.parse("como estão as vendas do dia do 06");
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas do dia do 06");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        assertEquals(LocalDate.parse("06/" + thisMonth + "/" + thisYear, dtf), biaPeriod.getInitialDateFormatted());
-        assertEquals(LocalDate.parse("06/" + thisMonth + "/" + thisYear, dtf), biaPeriod.getFinalDateFormatted());
+        assertEquals(LocalDate.of(thisYear, thisMonth, 6 ),
+                    TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.of(thisYear, thisMonth, 6 ),
+                    TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
-    public void day21() {
-        Period biaPeriod = periodParser.parse("como estão as vendas do dia 07 por favor");
+    public void day2_1() {
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas do dia 07 por favor");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        assertEquals(LocalDate.parse("07/" + thisMonth + "/" + thisYear, dtf), biaPeriod.getInitialDateFormatted());
-        assertEquals(LocalDate.parse("07/" + thisMonth + "/" + thisYear, dtf), biaPeriod.getFinalDateFormatted());
+        assertEquals(LocalDate.of(thisYear, thisMonth, 7 ),
+                TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.of(thisYear, thisMonth, 7 ),
+                TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
     public void day3() {
-        Period biaPeriod = periodParser.parse("como estão as vendas do dia do 06 do mes");
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas do dia do 06 do mes");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        assertEquals(LocalDate.parse("06/" + thisMonth + "/" + thisYear, dtf), biaPeriod.getInitialDateFormatted());
-        assertEquals(LocalDate.parse("06/" + thisMonth + "/" + thisYear, dtf), biaPeriod.getFinalDateFormatted());
+        assertEquals(LocalDate.of(thisYear, thisMonth, 6 ),
+                TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.of(thisYear, thisMonth, 6 ),
+                TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
-    public void day31() {
-        Period biaPeriod = periodParser.parse("como estão as vendas do dia do 06 do mes passado");
+    public void day3_1() {
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas do dia do 06 do mes passado");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        assertEquals(LocalDate.parse("06/" + lastMonth + "/" + thisYear, dtf), biaPeriod.getInitialDateFormatted());
-        assertEquals(LocalDate.parse("06/" + lastMonth + "/" + thisYear, dtf), biaPeriod.getFinalDateFormatted());
-    }
-
-    @Test
-    public void day32() {
-        Period biaPeriod = periodParser.parse("como estão as vendas do dia do 06 do mes que passou");
-
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        assertEquals(LocalDate.parse("06/" + lastMonth + "/" + thisYear, dtf), biaPeriod.getInitialDateFormatted());
-        assertEquals(LocalDate.parse("06/" + lastMonth + "/" + thisYear, dtf), biaPeriod.getFinalDateFormatted());
-    }
-
-    @Test
-    public void day33() {
-        Period biaPeriod = periodParser.parse("como estão as vendas do dia do 4 do mÊs que VeM");
-
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        if(nextMonth == 1) {
-            LocalDate firstDate = LocalDate.parse("04/0" + nextMonth + "/" + nextYear, dtf);
-
-            assertEquals(firstDate, biaPeriod.getInitialDateFormatted());
-            assertEquals(firstDate, biaPeriod.getFinalDateFormatted());
-        } else if(nextMonth < 10){
-            LocalDate firstDate = LocalDate.parse("04/0" + nextMonth + "/" + thisYear, dtf);
-
-            assertEquals(firstDate, biaPeriod.getInitialDateFormatted());
-            assertEquals(firstDate, biaPeriod.getFinalDateFormatted());
-        } else {
-            LocalDate firstDate = LocalDate.parse("04/" + nextMonth + "/" + thisYear, dtf);
-
-            assertEquals(firstDate, biaPeriod.getInitialDateFormatted());
-            assertEquals(firstDate, biaPeriod.getFinalDateFormatted());
+        if(thisMonth == 1) {
+            assertEquals(LocalDate.of(lastYear, lastMonth, 6 ),
+                    TempoPeriod.getInitialDateFormatted());
+            assertEquals(LocalDate.of(lastYear, lastMonth, 6 ),
+                    TempoPeriod.getFinalDateFormatted());
         }
     }
 
     @Test
-    public void day34() {
-        Period biaPeriod = periodParser.parse("como estão as vendas do dia do 11 do mês próXiMo");
+    public void day3_2() {
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas do dia do 06 do mes que passou");
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        if(thisMonth == 1) {
+            assertEquals(LocalDate.of(lastYear, lastMonth, 6 ),
+                    TempoPeriod.getInitialDateFormatted());
+            assertEquals(LocalDate.of(lastYear, lastMonth, 6 ),
+                    TempoPeriod.getFinalDateFormatted());
+        } else {
+            assertEquals(LocalDate.of(thisYear, lastMonth, 6 ),
+                    TempoPeriod.getInitialDateFormatted());
+            assertEquals(LocalDate.of(thisYear, lastMonth, 6 ),
+                    TempoPeriod.getFinalDateFormatted());
+        }
+    }
+
+    @Test
+    public void day3_3() {
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas do dia do 4 do mÊs que VeM");
+
+        if(nextMonth == 1) {
+            assertEquals(LocalDate.of(nextYear, nextMonth, 4 ),
+                    TempoPeriod.getInitialDateFormatted());
+            assertEquals(LocalDate.of(nextYear, nextMonth, 4),
+                    TempoPeriod.getFinalDateFormatted());
+        } else {
+            assertEquals(LocalDate.of(thisYear, nextMonth, 4 ),
+                    TempoPeriod.getInitialDateFormatted());
+            assertEquals(LocalDate.of(thisYear, nextMonth, 4),
+                    TempoPeriod.getFinalDateFormatted());
+        }
+    }
+
+    @Test
+    public void day3_4() {
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas do dia do 11 do mês próXiMo");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         if(nextMonth == 1) {
             LocalDate firstDate = LocalDate.parse("11/0" + nextMonth + "/" + nextYear, dtf);
 
-            assertEquals(firstDate, biaPeriod.getInitialDateFormatted());
-            assertEquals(firstDate, biaPeriod.getFinalDateFormatted());
+            assertEquals(firstDate, TempoPeriod.getInitialDateFormatted());
+            assertEquals(firstDate, TempoPeriod.getFinalDateFormatted());
         } else if(nextMonth < 10) {
             LocalDate firstDate = LocalDate.parse("11/0" + nextMonth + "/" + thisYear, dtf);
 
-            assertEquals(firstDate, biaPeriod.getInitialDateFormatted());
-            assertEquals(firstDate, biaPeriod.getFinalDateFormatted());
+            assertEquals(firstDate, TempoPeriod.getInitialDateFormatted());
+            assertEquals(firstDate, TempoPeriod.getFinalDateFormatted());
         } else {
             LocalDate firstDate = LocalDate.parse("11/" + nextMonth + "/" + thisYear, dtf);
 
-            assertEquals(firstDate, biaPeriod.getInitialDateFormatted());
-            assertEquals(firstDate, biaPeriod.getFinalDateFormatted());
+            assertEquals(firstDate, TempoPeriod.getInitialDateFormatted());
+            assertEquals(firstDate, TempoPeriod.getFinalDateFormatted());
         }
     }
 
     @Test
-    public void day35() {
-        Period biaPeriod = periodParser.parse("como estão as vendas do dia do 11 do mês próXiMo");
+    public void day3_5() {
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas do dia do 11 do mês próXiMo");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         if(nextMonth == 1) {
             LocalDate firstDate = LocalDate.parse("11/0" + nextMonth + "/" + nextYear, dtf);
 
-            assertEquals(firstDate, biaPeriod.getInitialDateFormatted());
-            assertEquals(firstDate, biaPeriod.getFinalDateFormatted());
+            assertEquals(firstDate, TempoPeriod.getInitialDateFormatted());
+            assertEquals(firstDate, TempoPeriod.getFinalDateFormatted());
         } else if(nextMonth < 10){
             LocalDate firstDate = LocalDate.parse("11/0" + nextMonth + "/" + thisYear, dtf);
 
-            assertEquals(firstDate, biaPeriod.getInitialDateFormatted());
-            assertEquals(firstDate, biaPeriod.getFinalDateFormatted());
+            assertEquals(firstDate, TempoPeriod.getInitialDateFormatted());
+            assertEquals(firstDate, TempoPeriod.getFinalDateFormatted());
         } else {
             LocalDate firstDate = LocalDate.parse("11/" + nextMonth + "/" + thisYear, dtf);
 
-            assertEquals(firstDate, biaPeriod.getInitialDateFormatted());
-            assertEquals(firstDate, biaPeriod.getFinalDateFormatted());
+            assertEquals(firstDate, TempoPeriod.getInitialDateFormatted());
+            assertEquals(firstDate, TempoPeriod.getFinalDateFormatted());
         }
     }
 
     @Test
     public void day4() {
-        Period biaPeriod = periodParser.parse("como estão as vendas do dia 17 do mes do NoVembro");
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas do dia 17 do mes do NoVembro");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        assertEquals(LocalDate.parse("17/11/" + thisYear, dtf), biaPeriod.getInitialDateFormatted());
-        assertEquals(LocalDate.parse("17/11/" + thisYear, dtf), biaPeriod.getFinalDateFormatted());
+        assertEquals(LocalDate.parse("17/11/" + thisYear, dtf), TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.parse("17/11/" + thisYear, dtf), TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
-    public void day41() {
-        Period biaPeriod = periodParser.parse("como estão as vendas do dia 17 do mes do NoVembro de 2013");
+    public void day4_1() {
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas do dia 17 do mes do NoVembro de 2013");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        assertEquals(LocalDate.parse("17/11/2013", dtf), biaPeriod.getInitialDateFormatted());
-        assertEquals(LocalDate.parse("17/11/2013", dtf), biaPeriod.getFinalDateFormatted());
+        assertEquals(LocalDate.parse("17/11/2013", dtf), TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.parse("17/11/2013", dtf), TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
-    public void day42() {
-        Period biaPeriod = periodParser.parse("como estão as vendas do dia 17 do mes do NoVembro de ano passado");
+    public void day4_2() {
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas do dia 17 do mes do NoVembro de ano passado");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        assertEquals(LocalDate.parse("17/11/" + lastYear, dtf), biaPeriod.getInitialDateFormatted());
-        assertEquals(LocalDate.parse("17/11/" + lastYear, dtf), biaPeriod.getFinalDateFormatted());
+        assertEquals(LocalDate.parse("17/11/" + lastYear, dtf), TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.parse("17/11/" + lastYear, dtf), TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
-    public void day43() {
-        Period biaPeriod = periodParser.parse("como estão as vendas do dia 17 do mes do NoVembro de ano que VeM");
+    public void day4_3() {
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas do dia 17 do mes do NoVembro de ano que VeM");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        assertEquals(LocalDate.parse("17/11/" + nextYear, dtf), biaPeriod.getInitialDateFormatted());
-        assertEquals(LocalDate.parse("17/11/" + nextYear, dtf), biaPeriod.getFinalDateFormatted());
+        assertEquals(LocalDate.parse("17/11/" + nextYear, dtf), TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.parse("17/11/" + nextYear, dtf), TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
     public void day5() {
-        Period biaPeriod = periodParser.parse("como estão as vendas do dia 17 do mes Jan do ano 1965");
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas do dia 17 do mes Jan do ano 1965");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        assertEquals(LocalDate.parse("17/01/1965", dtf), biaPeriod.getInitialDateFormatted());
-        assertEquals(LocalDate.parse("17/01/1965", dtf), biaPeriod.getFinalDateFormatted());
+        assertEquals(LocalDate.parse("17/01/1965", dtf), TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.parse("17/01/1965", dtf), TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
     public void day6() {
-        Period biaPeriod = periodParser.parse("como estão as vendas do 17 do 05");
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas do 17 do 05");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        assertEquals(LocalDate.parse("17/05/" + thisYear, dtf), biaPeriod.getInitialDateFormatted());
-        assertEquals(LocalDate.parse("17/05/" + thisYear, dtf), biaPeriod.getFinalDateFormatted());
+        assertEquals(LocalDate.parse("17/05/" + thisYear, dtf), TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.parse("17/05/" + thisYear, dtf), TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
-    public void day61() {
-        Period biaPeriod = periodParser.parse("como estão as vendas do 17 do 2 do 1901");
+    public void day6_1() {
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas do 17 do 2 do 1901");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        assertEquals(LocalDate.parse("17/02/1901", dtf), biaPeriod.getInitialDateFormatted());
-        assertEquals(LocalDate.parse("17/02/1901", dtf), biaPeriod.getFinalDateFormatted());
+        assertEquals(LocalDate.parse("17/02/1901", dtf), TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.parse("17/02/1901", dtf), TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
     public void day7() {
-        Period biaPeriod = periodParser.parse("como estão as vendas de ontem");
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas de ontem");
 
-        assertEquals(yesterday, biaPeriod.getInitialDateFormatted());
-        assertEquals(yesterday, biaPeriod.getFinalDateFormatted());
+        assertEquals(yesterday, TempoPeriod.getInitialDateFormatted());
+        assertEquals(yesterday, TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
     public void day8() {
-        Period biaPeriod = periodParser.parse("como estão as vendas de amanhA por favor");
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas de amanhA por favor");
 
-        assertEquals(tomorrow, biaPeriod.getInitialDateFormatted());
-        assertEquals(tomorrow, biaPeriod.getFinalDateFormatted());
+        assertEquals(tomorrow, TempoPeriod.getInitialDateFormatted());
+        assertEquals(tomorrow, TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
     public void day9() {
-        Period biaPeriod = periodParser.parse("como estão as vendas de depois de     amanhA por favor");
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas de depois de     amanhA por favor");
 
-        assertEquals(afterTomorrow, biaPeriod.getInitialDateFormatted());
-        assertEquals(afterTomorrow, biaPeriod.getFinalDateFormatted());
+        assertEquals(afterTomorrow, TempoPeriod.getInitialDateFormatted());
+        assertEquals(afterTomorrow, TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
     public void day10() {
-        Period biaPeriod = periodParser.parse("como estão as vendas de anteOntem por favor");
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas de anteOntem por favor");
 
-        assertEquals(beforeYesterday, biaPeriod.getInitialDateFormatted());
-        assertEquals(beforeYesterday, biaPeriod.getFinalDateFormatted());
+        assertEquals(beforeYesterday, TempoPeriod.getInitialDateFormatted());
+        assertEquals(beforeYesterday, TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
     public void day11() {
-        Period biaPeriod = periodParser.parse("como estão as vendas de antes de Ontem por favor");
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas de antes de Ontem por favor");
 
-        assertEquals(beforeYesterday, biaPeriod.getInitialDateFormatted());
-        assertEquals(beforeYesterday, biaPeriod.getFinalDateFormatted());
+        assertEquals(beforeYesterday, TempoPeriod.getInitialDateFormatted());
+        assertEquals(beforeYesterday, TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
     public void day12() {
-        Period biaPeriod = periodParser.parse("como estão as vendas de hojE");
+        TempoPeriod TempoPeriod = periodParser.parse("como estão as vendas de hojE");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        if(LocalDate.now().getDayOfMonth() < 10) {
-            assertEquals(LocalDate.parse("0" + LocalDate.now().getDayOfMonth() + "/" + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getYear(), dtf), biaPeriod.getInitialDateFormatted());
-            assertEquals(LocalDate.parse("0" +  LocalDate.now().getDayOfMonth() + "/" + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getYear(), dtf), biaPeriod.getFinalDateFormatted());
-        } else {
-            assertEquals(LocalDate.parse(LocalDate.now().getDayOfMonth() + "/" + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getYear(), dtf), biaPeriod.getInitialDateFormatted());
-            assertEquals(LocalDate.parse(LocalDate.now().getDayOfMonth() + "/" + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getYear(), dtf), biaPeriod.getFinalDateFormatted());
-        }
+        assertEquals(LocalDate.of(LocalDate.now().getYear(),
+                        LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth()),
+                TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.of(LocalDate.now().getYear(),
+                        LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth()),
+                TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
     public void day13() {
-        Period biaPeriod = periodParser.parse("Como estao as vendas do dia do 3/5");
+        TempoPeriod TempoPeriod = periodParser.parse("Como estao as vendas do dia do 3/5");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        assertEquals(LocalDate.parse("03/05/2018", dtf), biaPeriod.getInitialDateFormatted());
-        assertEquals(LocalDate.parse("03/05/2018", dtf), biaPeriod.getFinalDateFormatted());
+        assertEquals(LocalDate.of(thisYear, 5, 3), TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.of(thisYear, 5, 3), TempoPeriod.getFinalDateFormatted());
     }
 
     @Test
     public void day14() {
-        Period biaPeriod = periodParser.parse("Como estao as vendas do dia do 3/5/2019");
+        TempoPeriod TempoPeriod = periodParser.parse("Como estao as vendas do dia do 3/5/2019");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        assertEquals(LocalDate.parse("03/05/2019", dtf), biaPeriod.getInitialDateFormatted());
-        assertEquals(LocalDate.parse("03/05/2019", dtf), biaPeriod.getFinalDateFormatted());
+        assertEquals(LocalDate.parse("03/05/2019", dtf), TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.parse("03/05/2019", dtf), TempoPeriod.getFinalDateFormatted());
     }
 
+    @Test
+    public void day15() {
+        TempoPeriod TempoPeriod = periodParser.parse("Como estao as vendas do dia do cinco do mês 05 do ano 2019");
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        assertEquals(LocalDate.parse("05/05/2019", dtf), TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.parse("05/05/2019", dtf), TempoPeriod.getFinalDateFormatted());
+    }
+
+    @Test
+    public void day16() {
+        TempoPeriod TempoPeriod = periodParser.parse("As vendas do dia do vinte e um do mês seis do ano 2019");
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        assertEquals(LocalDate.parse("21/06/2019", dtf), TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.parse("21/06/2019", dtf), TempoPeriod.getFinalDateFormatted());
+    }
+
+    @Test
+    public void day17() {
+        TempoPeriod TempoPeriod = periodParser.parse("As vendas do dia do vinte  do mês nove do ano que vem");
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        assertEquals(LocalDate.parse("20/09/" + nextYear, dtf), TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.parse("20/09/" + nextYear, dtf), TempoPeriod.getFinalDateFormatted());
+    }
+
+    @Test
+    public void day18() {
+        TempoPeriod TempoPeriod = periodParser.parse("As vendas do dia trinta e     um  do mês nove do ano que vem");
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        assertEquals(LocalDate.parse("30/09/" + nextYear, dtf), TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.parse("30/09/" + nextYear, dtf), TempoPeriod.getFinalDateFormatted());
+    }
+
+    @Test
+    public void day19() {
+        TempoPeriod TempoPeriod = periodParser.parse("As vendas do dia vinte    seis do 11 deste ano");
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        assertEquals(LocalDate.parse("26/11/" + thisYear, dtf), TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.parse("26/11/" + thisYear, dtf), TempoPeriod.getFinalDateFormatted());
+    }
+
+//    @Test
+//    public void day20() {
+//        TempoPeriod TempoPeriod = periodParser.parse("As vendas do dia vinteseis do mês de trinta e dois deste ano");
+//
+//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//
+//        assertEquals(LocalDate.parse("26/" + thisMonth + "/" + thisYear, dtf), TempoPeriod.getInitialDateFormatted());
+//        assertEquals(LocalDate.parse("31/12/" + thisYear, dtf), TempoPeriod.getFinalDateFormatted());
+//    }
+
+    /*@Test
+    public void day21() {
+        TempoPeriod TempoPeriod = periodParser.parse("As vendas do dia trinta   e dois do mês de dois deste ano");
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        assertEquals(LocalDate.parse("01/02/" + thisYear, dtf), TempoPeriod.getInitialDateFormatted());
+        assertEquals(LocalDate.parse("20/12/" + thisYear, dtf), TempoPeriod.getFinalDateFormatted());
+    }*/
 }
