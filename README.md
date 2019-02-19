@@ -1,5 +1,5 @@
 # TemporalTagger
-Tool for extracting and parsing time expressions from natural language texts. You can find the readme in Portuguese <a href="https://github.com/sankhyalabs/bia-time/blob/master/README.md">here</a>.
+Tool for extracting and parsing time expressions from natural language texts in Brazilian Portuguese. You can find the readme in Portuguese <a href="https://github.com/NajwaLaabid/TemporalTagger/blob/master/README_Portuguese">here</a>.
 
 ## Overview and Usage
 TemporalTagger is a library designed for temporal tagging in Brazilian portuguese. The library proposes a solution to the sub-problem of creating a period (start date and end date in a computer-friendly format) from a user's query in natural language, alongside a more general tool for extracting time expressions from natural language texts in general. It can be used in chatbots, schedulers, personal assistants, or any program expected to receive temporal information in a non-standard format. 
