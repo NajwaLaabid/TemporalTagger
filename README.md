@@ -131,7 +131,4 @@ To use TemporalTagger, perform the following steps:
 - Instantiate the parser(s) you wish to use (refer to the example in the first section of this README).
 - Call the function "parse" of the parser(s) initiated earlier and give it the text you wish to parse.
 
-## License
-This work is the property of Sankhya Jiva. It is meant to be used as an internal module by any teams/projects within the company. Any usage of TemporalTagger by external entities requires the explicit permission of the owner of the project (i.e, representative of Sankhya Jiva). These terms of usage shall be changed should the project be released to the public in the future.
-
 
