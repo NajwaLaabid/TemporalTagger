@@ -41,7 +41,7 @@ It has the ability to parse absolute and partial date references, expressed in n
             <tr>
                   <td rowspan = 2>Standard Date (absolute)</td>
                   <td>Manda infromações sobre as vendas desde o dia 23/02/2018 até o dia 24/05/2018</td>
-                  <td>Init.: <b>01/11/2018</b><br>Fin.: <b>31/12/2018</b></td>
+                  <td>Init.: <b>23/02/2018</b><br>Fin.: <b>24/05/2018</b></td>
             </tr>
             <tr>
                   <td>Como foram as vendas do dia 05 do dezembro do ano 2015?</td>
